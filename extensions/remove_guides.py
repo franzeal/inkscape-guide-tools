@@ -45,4 +45,4 @@ class remove_guides(inkex.Effect):
 
 # Create effect instance.
 effect = remove_guides()
-effect.affect()
+effect.run()

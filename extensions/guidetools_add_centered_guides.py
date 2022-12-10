@@ -56,8 +56,8 @@ class addCenteredGuides(inkex.Effect):
 		inkex.Effect.__init__(self)
 
 		# Define string option "--target"
-		self.OptionParser.add_option('--target',
-				action="store", type="string", 
+		self.arg_parser.add_argument('--target',
+				action="store", type=str, 
 				dest="target", default="document",
 				help="Target: document or selection")
 
@@ -74,8 +74,8 @@ class addCenteredGuides(inkex.Effect):
 		svg = self.document.getroot()
 
 		# getting the width and height attributes of the canvas
-		canvas_width  = self.unittouu(svg.get('width'))
-		canvas_height = self.unittouu(svg.attrib['height'])
+		canvas_width  = self.svg.unittouu(svg.get('width'))
+		canvas_height = self.svg.unittouu(svg.attrib['height'])
 
 		# If a selected object exists, set guides to that object. 
 		# Otherwise, use document center guides		
@@ -90,7 +90,7 @@ class addCenteredGuides(inkex.Effect):
 			q = {'x':0, 'y':0, 'width':0, 'height':0}
 			for query in q.keys():
 				p = Popen(
-					'inkscape --query-%s --query-id=%s "%s"' % (query, self.options.ids[0], self.args[-1], ),
+					'inkscape --query-%s --query-id=%s "%s"' % (query, self.options.ids[0], self.options.input_file, ),
 					shell=True,
 					stdout=PIPE,
 					stderr=PIPE,
@@ -118,4 +118,4 @@ class addCenteredGuides(inkex.Effect):
 # APPLY
 # Create effect instance and apply it. Taking in SVG, changing it, and then outputing SVG
 effect = addCenteredGuides()
-effect.affect()
+effect.run()

@@ -41,18 +41,14 @@ def printError(string):
 
 # Draw single guide
 # parameters: position (single length), orientation ("horizontal/vertical"), parent
-def drawGuide(position, orientation, parent):
-
-	if orientation == "vertical":
-		orientationString = "1,0"
-		positionString = str(position) + ",0"
-
-	if orientation == "horizontal":
-		orientationString = "0,1"
-		positionString = "0," + str(position)
-
-	# Create a sodipodi:guide node
-	inkex.etree.SubElement(parent,'{http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd}guide',{'position':positionString,'orientation':orientationString})
+def drawGuide(position, orientation, self):
+	if (orientation == "vertical"):
+		newpos = [position, 0]
+		orientation = [1, 0]
+	else:
+		newpos = [0, position]
+		orientation = [0, 1]	
+	self.new_guide(newpos, orientation)
 
 def drawCenteredGuides(positionX, positionY, include_hor, include_vert, parent):
 
@@ -74,14 +70,14 @@ class addCenteredGuides(inkex.Effect):
 		inkex.Effect.__init__(self)
 
 		# Define boolean option "--include_hor_guide"
-		self.OptionParser.add_option('--include_hor_guide',
-			action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--include_hor_guide',
+			type=inkex.Boolean,
 			dest = 'include_hor_guide', default = False,
 			help = 'Include centered horizontal guide')
 
 		# Define boolean option "--include_vert_guide"
-		self.OptionParser.add_option('--include_vert_guide',
-			action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--include_vert_guide',
+			type=inkex.Boolean,
 			dest = 'include_vert_guide', default = False,
 			help = 'Include centered vertical guide')
 
@@ -99,8 +95,8 @@ class addCenteredGuides(inkex.Effect):
 		svg = self.document.getroot()
 
 		# getting the width and height attributes of the canvas
-		canvas_width  = self.unittouu(svg.get('width'))
-		canvas_height = self.unittouu(svg.attrib['height'])
+		canvas_width  = self.svg.unittouu(svg.get('width'))
+		canvas_height = self.svg.unittouu(svg.attrib['height'])
 
 		# calculate center of document
 		center_pos_x = canvas_width/2
@@ -115,4 +111,4 @@ class addCenteredGuides(inkex.Effect):
 
 # Create effect instance and apply it. Taking in SVG, changing it, and then outputing SVG
 effect = addCenteredGuides()
-effect.affect()
+effect.run()

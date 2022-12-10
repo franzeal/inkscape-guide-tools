@@ -12,22 +12,15 @@ def show(string):
 	inkex.errormsg(_(str(string)))
 
 # Draw single guide
-# parameters: position (single length), orientation ("horizontal/vertical"), parent (namedview)
-def drawGuide(position, orientation, parent):
-
+# parameters: position (single length), orientation ("horizontal/vertical"), parent
+def drawGuide(position, orientation, self):
 	if (orientation == "vertical"):
-		orientationString = "1,0"
-		positionString = str(position) + ",0"
+		newpos = [position, 0]
+		orientation = [1, 0]
 	else:
-		orientationString = "0,1"
-		positionString = "0," + str(position)
-
-	# Create a sodipodi:guide node
-	inkex.etree.SubElement(parent,'{http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd}guide',{'position':positionString,'orientation':orientationString})
-
-	# Adding color to guide is not working in 0.91, as Inkscape doesn't read the value in the xml, due to a bug.
-	# Let's wait for 0.92 to implement this then. Here is the code to use:
-	# inkex.etree.SubElement(parent,'{http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd}guide',{'position':positionString,'orientation':orientationString, '{http://www.inkscape.org/namespaces/inkscape}color':"rgb(255,0,0)"})
+		newpos = [0, position]
+		orientation = [0, 1]	
+	self.new_guide(newpos, orientation)
 
 # Delete all/vertical/horizontal guides
 def deleteGuidesByOrientation(document, orientation):

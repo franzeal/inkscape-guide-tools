@@ -56,50 +56,50 @@ class addMarginGuides(inkex.Effect):
 		# Call the base class constructor.
 		inkex.Effect.__init__(self)
 
-		self.OptionParser.add_option("--tab",
-				action="store", type="string",
+		self.arg_parser.add_argument("--tab",
+				action="store", type=str,
 				dest="tab", default="columns",
 				help="")
 
 		# Define string option "--unit"
-		self.OptionParser.add_option('--unit',
-				action="store", type="string", 
+		self.arg_parser.add_argument('--unit',
+				action="store", type=str, 
 				dest="unit", default="mm",
 				help="The unit of the values")
 
 		# Define string option "--target"
-		self.OptionParser.add_option('--target',
-				action="store", type="string", 
+		self.arg_parser.add_argument('--target',
+				action="store", type=str, 
 				dest="target", default="document",
 				help="Target: document or selection")
 
 		# Define boolean option "--same_margins"
-		self.OptionParser.add_option('--same_margins',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--same_margins',
+				type=inkex.Boolean,
 				dest = 'same_margins', default = False,
 				help = 'Same margins on all four sides')
 
 		# Define string option "--top_margin"
-		self.OptionParser.add_option('--top_margin',
-				action = 'store',type = 'string',
+		self.arg_parser.add_argument('--top_margin',
+				action = 'store',type=str,
 				dest = 'top_margin',default = 'centered',
 				help = 'Top margin, distance from top border')
 
 		# Define string option "--right_margin"
-		self.OptionParser.add_option('--right_margin',
-				action = 'store',type = 'string',
+		self.arg_parser.add_argument('--right_margin',
+				action = 'store',type=str,
 				dest = 'right_margin',default = 'centered',
 				help = 'Right margin, distance from right border')
 
 		# Define string option "--bottom_margin"
-		self.OptionParser.add_option('--bottom_margin',
-				action = 'store',type = 'string',
+		self.arg_parser.add_argument('--bottom_margin',
+				action = 'store',type=str,
 				dest = 'bottom_margin',default = 'centered',
 				help = 'Bottom margin, distance from bottom border')
 
 		# Define string option "--left_margin"
-		self.OptionParser.add_option('--left_margin',
-				action = 'store',type = 'string',
+		self.arg_parser.add_argument('--left_margin',
+				action = 'store',type=str,
 				dest = 'left_margin',default = 'centered',
 				help = 'Left margin, distance from left border')
 
@@ -108,7 +108,7 @@ class addMarginGuides(inkex.Effect):
 		# Get script's options values.
 		
 		# Factor to multiply in order to get user units (pixels)
-		factor = self.unittouu('1' + self.options.unit)
+		factor = self.svg.unittouu('1' + self.options.unit)
 
 		# document or selection
 		target = self.options.target
@@ -135,8 +135,8 @@ class addMarginGuides(inkex.Effect):
 			left_margin = top_margin
 
 		# getting the width and height attributes of the canvas
-		canvas_width  = self.unittouu(svg.get('width'))
-		canvas_height = self.unittouu(svg.get('height'))
+		canvas_width  = self.svg.unittouu(svg.get('width'))
+		canvas_height = self.svg.unittouu(svg.get('height'))
 
 		# If selection, draw around selection. Otherwise use document.
 		if (target == "selection"):
@@ -150,7 +150,7 @@ class addMarginGuides(inkex.Effect):
 			q = {'x':0, 'y':0, 'width':0, 'height':0}
 			for query in q.keys():
 				p = Popen(
-					'inkscape --query-%s --query-id=%s "%s"' % (query, self.options.ids[0], self.args[-1], ),
+					'inkscape --query-%s --query-id=%s "%s"' % (query, self.options.ids[0], self.options.input_file, ),
 					shell=True,
 					stdout=PIPE,
 					stderr=PIPE,
@@ -202,4 +202,4 @@ class addMarginGuides(inkex.Effect):
 
 # Create effect instance and apply it. Taking in SVG, changing it, and then outputing SVG
 effect = addMarginGuides()
-effect.affect()
+effect.run()

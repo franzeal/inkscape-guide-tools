@@ -49,102 +49,102 @@ class Grid_Guides(inkex.Effect):
 
 		# Parse options and store them in self.options.[destination]
 
-		self.OptionParser.add_option("--tab",
-				action="store", type="string",
+		self.arg_parser.add_argument("--tab",
+				action="store", type=str,
 				dest="tab", default="columns",
 				help="")
 
 		# COLUMNS (vertical guides)
 
-		self.OptionParser.add_option('--column_unit',
-				action="store", type="string", 
+		self.arg_parser.add_argument('--column_unit',
+				action="store", type=str, 
 				dest="column_unit", default="mm",
 				help="The unit of the values")
 
-		self.OptionParser.add_option('--column_alignment',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--column_alignment',
+				type=str,
 				dest = 'column_alignment', default = 'centered',
 				help = 'Alignment of the columns in relation to the document')
 
-		self.OptionParser.add_option('--column_offset',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--column_offset',
+				type=str,
 				dest = 'column_offset', default = '0',
 				help = 'Offset distance from the left')
 
-		self.OptionParser.add_option('--columns',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--columns',
+				type=str,
 				dest = 'columns', default = 0,
 				help = 'Number of columns')
 
-		self.OptionParser.add_option('--column_width',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--column_width',
+				type=str,
 				dest = 'column_width', default = 0,
 				help = 'Width of each column')
 
-		self.OptionParser.add_option('--column_gutter',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--column_gutter',
+				type=str,
 				dest = 'column_gutter', default = 0,
 				help = 'Spacing between columns')
 
-		self.OptionParser.add_option('--include_center_col_guides',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--include_center_col_guides',
+				type=inkex.Boolean,
 				dest = 'include_center_col_guides', default = False,
 				help = 'Include centered guides inside gutters)')
 
-		self.OptionParser.add_option('--include_outer_col_gutter',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--include_outer_col_gutter',
+				type=inkex.Boolean,
 				dest = 'include_outer_col_gutter', default = True,
 				help = 'Include outer gutters (double guides)')
 
-		self.OptionParser.add_option('--delete_vert_guides',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--delete_vert_guides',
+				type=inkex.Boolean,
 				dest = 'delete_vert_guides', default = False,
 				help = 'Delete existing vertical guides')
 
 		# ROWS (horizontal guides)
 
-		self.OptionParser.add_option('--row_unit',
-				action="store", type="string", 
+		self.arg_parser.add_argument('--row_unit',
+				action="store", type=str, 
 				dest="row_unit", default="mm",
 				help="The unit of the values")
 
-		self.OptionParser.add_option('--row_alignment',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--row_alignment',
+				type=str,
 				dest = 'row_alignment', default = 'centered',
 				help = 'Alignment of rows in relation to the document')
 
-		self.OptionParser.add_option('--row_offset',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--row_offset',
+				type=str,
 				dest = 'row_offset', default = '0',
 				help = 'Offset distance from the top')
 
-		self.OptionParser.add_option('--rows',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--rows',
+				type=str,
 				dest = 'rows', default = 0,
 				help = 'Number of rows')
 
-		self.OptionParser.add_option('--row_height',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--row_height',
+				type=str,
 				dest = 'row_height', default = 0,
 				help = 'Width of each row')
 
-		self.OptionParser.add_option('--row_gutter',
-				action = 'store', type = 'string',
+		self.arg_parser.add_argument('--row_gutter',
+				type=str,
 				dest = 'row_gutter', default = 0,
 				help = 'Spacing between rows')
 
-		self.OptionParser.add_option('--include_outer_row_gutter',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--include_outer_row_gutter',
+				type=inkex.Boolean,
 				dest = 'include_outer_row_gutter', default = True,
 				help = 'Include outer gutters (double guides)')
 
-		self.OptionParser.add_option('--include_center_row_guides',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--include_center_row_guides',
+				type=inkex.Boolean,
 				dest = 'include_center_row_guides', default = True,
 				help = 'Include centered guides inside gutters')
 
-		self.OptionParser.add_option('--delete_hor_guides',
-				action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--delete_hor_guides',
+				type=inkex.Boolean,
 				dest = 'delete_hor_guides', default = False,
 				help = 'Delete existing horizontal guides')
 
@@ -157,7 +157,7 @@ class Grid_Guides(inkex.Effect):
 		# columns
 
 		# Factor to multiply in order to get value in user units (pixels)
-		col_factor = self.unittouu('1' + self.options.column_unit)
+		col_factor = self.svg.unittouu('1' + self.options.column_unit)
 		col_alignment = self.options.column_alignment
 		col_offset = float(self.options.column_offset) * col_factor
 		cols = int(self.options.columns)
@@ -168,7 +168,7 @@ class Grid_Guides(inkex.Effect):
 		delete_hor = self.options.delete_hor_guides
 
 		# rows
-		row_factor = self.unittouu('1' + self.options.row_unit)
+		row_factor = self.svg.unittouu('1' + self.options.row_unit)
 		row_alignment = self.options.row_alignment
 		row_offset = float(self.options.row_offset) * row_factor
 		rows = int(self.options.rows)
@@ -183,8 +183,8 @@ class Grid_Guides(inkex.Effect):
 
 		# main SVG document element (canvas)
 		svg = self.document.getroot()
-		canvas_width  = self.unittouu(svg.get('width'))
-		canvas_height = self.unittouu(svg.attrib['height'])
+		canvas_width  = self.svg.unittouu(svg.get('width'))
+		canvas_height = self.svg.unittouu(svg.attrib['height'])
 
 		# total width  (columns and gutters)
 		if has_outer_col_gutter:
@@ -261,4 +261,4 @@ class Grid_Guides(inkex.Effect):
 
 # Create effect instance and apply it.
 effect = Grid_Guides()
-effect.affect()
+effect.run()

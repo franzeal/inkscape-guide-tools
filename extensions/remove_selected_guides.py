@@ -39,18 +39,18 @@ class remove_selected_guides(inkex.Effect):
 		# Call the base class constructor.
 		inkex.Effect.__init__(self)
 
-		self.OptionParser.add_option('--remove_hor_guide',
-			action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--remove_hor_guide',
+			type=inkex.Boolean,
 			dest = 'remove_hor_guide', default = False,
 			help = 'Remove all horizontal guides')
 
-		self.OptionParser.add_option('--remove_vert_guide',
-			action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--remove_vert_guide',
+			type=inkex.Boolean,
 			dest = 'remove_vert_guide', default = False,
 			help = 'Remove all vertical guides')
 
-		self.OptionParser.add_option('--remove_ang_guide',
-			action = 'store', type = 'inkbool',
+		self.arg_parser.add_argument('--remove_ang_guide',
+			type=inkex.Boolean,
 			dest = 'remove_ang_guide', default = False,
 			help = 'Remove all angled guides')
 
@@ -74,4 +74,4 @@ class remove_selected_guides(inkex.Effect):
 
 # Create effect instance.
 effect = remove_selected_guides()
-effect.affect()
+effect.run()
